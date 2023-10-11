@@ -1,6 +1,9 @@
 ﻿using Database;
 using Interfaces.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 
 namespace PollAPI.Controllers;
 
@@ -32,9 +35,67 @@ public class PollController : Controller
 
     [HttpPost]
     [Route("Polls/Create")]
-    public async Task CreatePoll([FromBody]PollDTO poll)
+    public async Task CreatePoll([FromBody]PollCreation pollcreator)
     {
-        await DB.CreatePoll(poll);
+        try
+        {
+            string APIURI = "https://localhost/5291";
+            
+            using (var client = new HttpClient())
+            {
+                var JSON = new StringContent(JsonSerializer.Serialize(pollcreator.UserAuth), Encoding.UTF8, "application/json");
+
+                client.BaseAddress = new Uri(APIURI);
+
+                var Response = await client.PostAsync("/User/Checks", JSON);
+
+                if (!Response.IsSuccessStatusCode)
+                {
+                    throw new Exception("User is not authorized to create polls.");
+                }
+
+            }
+
+            await DB.CreatePoll(pollcreator.Poll);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to create poll. ", ex);
+        }
+    }
+
+    [HttpPost]
+    [Route("Polls/Addvote")]
+    public async Task AddVote(string id, int option)
+    {
+        PollDTO poll = await DB.GetPollById(id);
+        try
+        {
+            poll.votes[option]++;
+            await DB.UpdatePoll(id, poll);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("cant add vote to non existing option. ", ex);
+        }
+    }
+
+    [HttpPost]
+    [Route("Polls/Setactive")]
+    public async Task SetActive(string id,[FromBody] bool active)
+    {
+        PollDTO poll = await DB.GetPollById(id);
+        poll.active = active;
+        await DB.UpdatePoll(id, poll);
+    }
+
+    [HttpPost]
+    [Route("Polls/Setvisible")]
+    public async Task SetVisible(string id, [FromBody] bool visible)
+    {
+        PollDTO poll = await DB.GetPollById(id);
+        poll.visible = visible;
+        await DB.UpdatePoll(id, poll);
     }
 
     [HttpPost]
