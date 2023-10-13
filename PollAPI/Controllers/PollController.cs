@@ -39,11 +39,20 @@ public class PollController : Controller
     {
         try
         {
-            string APIURI = "https://localhost/5291";
+            string APIURI = "http://localhost:5099";
             
             using (var client = new HttpClient())
             {
-                var JSON = new StringContent(JsonSerializer.Serialize(pollcreator.UserAuth), Encoding.UTF8, "application/json");
+                var userauth = new
+                {
+                    id = pollcreator.UserAuth.id,
+                    username = pollcreator.UserAuth.username,
+                    password = "",
+                    country = "",
+                    email = "",
+                    admin = pollcreator.UserAuth.admin
+                };
+                var JSON = new StringContent(JsonSerializer.Serialize(userauth), Encoding.UTF8, "application/json");
 
                 client.BaseAddress = new Uri(APIURI);
 
