@@ -45,12 +45,8 @@ public class PollController : Controller
             {
                 var userauth = new
                 {
-                    id = pollcreator.UserAuth.id,
-                    username = pollcreator.UserAuth.username,
-                    password = "",
-                    country = "",
-                    email = "",
-                    admin = pollcreator.UserAuth.admin
+                    token = pollcreator.Token,
+                    accesforadmin = true
                 };
                 var JSON = new StringContent(JsonSerializer.Serialize(userauth), Encoding.UTF8, "application/json");
 

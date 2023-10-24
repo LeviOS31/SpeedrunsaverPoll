@@ -9,6 +9,6 @@ namespace Interfaces.DTO
     public class PollCreation
     {
         public PollDTO Poll { get; set; }
-        public UserAuth UserAuth { get; set; }
+        public string Token { get; set; }
     }
 }
