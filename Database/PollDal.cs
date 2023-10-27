@@ -11,11 +11,8 @@ namespace Database
         {
             try
             {
-                var clientSettings = new MongoClientSettings
-                {
-                    Server = new MongoServerAddress("localhost", 27017),
-                    ConnectTimeout = TimeSpan.FromSeconds(10) // Set the connection timeout to 10 seconds.
-                };
+                var clientSettings = MongoClientSettings.FromConnectionString("mongodb+srv://PollsAPI:GkpwsTu9GSLGgVW@cluster0.1hrsxov.mongodb.net/?retryWrites=true&w=majority");
+                clientSettings.ConnectTimeout = TimeSpan.FromSeconds(30);
                 var client = new MongoClient(clientSettings);
                 var database = client.GetDatabase("Speedruns");
                 _collection = database.GetCollection<PollDTO>("polls");
