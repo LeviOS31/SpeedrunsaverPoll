@@ -45,6 +45,7 @@ public class PollController : Controller
             {
                 var userauth = new
                 {
+                    userid = pollcreator.Userid,
                     token = pollcreator.Token,
                     accesforadmin = true
                 };
