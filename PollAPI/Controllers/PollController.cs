@@ -1,9 +1,9 @@
 ﻿using Database;
 using Interfaces.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
 
 namespace PollAPI.Controllers;
 
